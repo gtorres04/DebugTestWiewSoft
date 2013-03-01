@@ -5,8 +5,8 @@
 package com.debugtestwiewsoft.managebean;
 
 import com.debugtestwiewsoft.dao.DaoImpl;
-import com.debugtestwiewsoft.businessmodel.DocumentoIdentidadBM;
-import com.debugtestwiewsoft.entity.DocumentoIdentidad;
+import com.debugtestwiewsoft.businessmodel.DominioBM;
+import com.debugtestwiewsoft.entity.Dominio;
 import java.io.Serializable;
 
 
@@ -19,9 +19,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 /**
- * ManageBean DocumentoIdentidadMB.
+ * ManageBean DominioMB.
  * En este ManageBean se controlan todos los eventos correspondientes
- * Al CRUD de la entidad DocumentoIdentidad lansados desde la vista:
+ * Al CRUD de la entidad Dominio lansados desde la vista:
  * 1. Registro.
  * 2. Listado.
  * 3. Modificacion.
@@ -30,37 +30,37 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @RequestScoped
-public class DocumentoIdentidadMB implements Serializable{
-    private DocumentoIdentidad entidad;
-    private List<DocumentoIdentidad> entidades;
+public class DominioMB implements Serializable{
+    private Dominio entidad;
+    private List<Dominio> entidades;
     /**
-     * Constructor DocumentoIdentidadMB (Vacio).
-     * Se crea una instancia del ManageBean y se crea un objeto de Tipo DocumentoIdentidadMB, 
+     * Constructor DominioMB (Vacio).
+     * Se crea una instancia del ManageBean y se crea un objeto de Tipo DominioMB, 
      * el cual tiene como objetivo, recibir y devolver los valores de la vista. 
-     * Ademas inicializa la lista de los DocumentoIdentidadMB que se han registrado hasta el momento.
+     * Ademas inicializa la lista de los DominioMB que se han registrado hasta el momento.
      * @author Gerlin Orlando Torres Saavedra.
      */
-    public DocumentoIdentidadMB() {
-        Log("se crea un objeto DocumentoIdentidadMB");
-        entidad=new DocumentoIdentidad();
-        getDocumentoIdentidades();
+    public DominioMB() {
+        Log("se crea un objeto DominioMB");
+        entidad=new Dominio();
+        getDominios();
     }
 
-    public DocumentoIdentidad getDocumentoIdentidad() {
+    public Dominio getDominio() {
         return entidad;
     }
 
-    public void setDocumentoIdentidad(DocumentoIdentidad entidad) {
+    public void setDominio(Dominio entidad) {
         this.entidad = entidad;
     }
     /**
-     * Metodo getDocumentoIdentidad().
-     * Trae de la base de datos los DocumentoIdentidad que se encuentran almacenados
-     * @return Una lista Vacia si no hay ningún DocumentoIdentidad registrado en la base de datos.
+     * Metodo getDominio().
+     * Trae de la base de datos los Dominio que se encuentran almacenados
+     * @return Una lista Vacia si no hay ningún Dominio registrado en la base de datos.
      * @author Gerlin Orlando Torres Saavedra.
      */
-    public List<DocumentoIdentidad> getDocumentoIdentidades() {
-        DocumentoIdentidadBM documentosIdentidadDao=new DocumentoIdentidadBM();
+    public List<Dominio> getDominios() {
+        DominioBM documentosIdentidadDao=new DominioBM();
         entidades=documentosIdentidadDao.buscarActivos();
         return entidades;
     }
@@ -71,11 +71,11 @@ public class DocumentoIdentidadMB implements Serializable{
      * @author Gerlin Orlando Torres Saavedra.
      */
     public void insertar(){
-        Log("METODO INSERTAR DOCUMENTOS IDENTIDAD");
-        DaoImpl documentosIdentidadDao=new DocumentoIdentidadBM();
+        Log("METODO INSERTAR DOMINIO");
+        DaoImpl documentosIdentidadDao=new DominioBM();
         String mensaje=documentosIdentidadDao.registrar(entidad);
         FacesContext context = FacesContext.getCurrentInstance(); 
-        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("REGISTRO DE DOCUMENTOIDENTIDAD",mensaje));        
+        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("REGISTRO DE DOMINIO",mensaje));        
     }
     /**
      * Metodo actualizar().
@@ -86,24 +86,24 @@ public class DocumentoIdentidadMB implements Serializable{
      * @author Gerlin Orlando Torres Saavedra.
      */
     public void actualizar(){
-        Log("METODO ACTUALIZAR DOCUMENTOIDENTIDAD");
-        DaoImpl documentosIdentidadDao=new DocumentoIdentidadBM();
+        Log("METODO ACTUALIZAR DOMINIO");
+        DaoImpl documentosIdentidadDao=new DominioBM();
         String mensaje=documentosIdentidadDao.actualizar(entidad);
         FacesContext context = FacesContext.getCurrentInstance(); 
-        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("ACTUALIZACION DE DocumentoIdentidad",mensaje));        
+        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("ACTUALIZACION DE Dominio",mensaje));        
     }
     /**
      * Metodo prepararActualizacion(Integer id).
-     * Recibe el Id del DocumentoIdentidad a modificar y lo consulta frente a la base de datos 
-     * obteniendo el objeto DocumentoIdentidad completo, para posteriormente asignarlo a la variable "entidad" (Global), 
+     * Recibe el Id del Dominio a modificar y lo consulta frente a la base de datos 
+     * obteniendo el objeto Dominio completo, para posteriormente asignarlo a la variable "entidad" (Global), 
      * para que cuando se llame el metodo @see actualizar() el objeto tenga sus valores modificados.
-     * @see actualizar() modifica el objeto DocumentoIdentidad.
-     * @param id ID del DocumentoIdentidad a Modificar.
+     * @see actualizar() modifica el objeto Dominio.
+     * @param id ID del Dominio a Modificar.
      * @author Gerlin Orlando Torres Saavedra.
      */
     public void prepararActualizacion(Integer id){
-        Log("METODO PREPARAR ACTUALIZACION DEL DocumentoIdentidad");
-        DocumentoIdentidadBM daoImpl=new DocumentoIdentidadBM();
+        Log("METODO PREPARAR ACTUALIZACION DEL Dominio");
+        DominioBM daoImpl=new DominioBM();
         entidad=daoImpl.buscarPorId(id);
     }
     /**
@@ -116,25 +116,25 @@ public class DocumentoIdentidadMB implements Serializable{
      * @author Gerlin Orlando Torres Saavedra.
      */
     public void eliminar(){
-        Log("METODO ELIMINAR DocumentoIdentidad");
-        DocumentoIdentidadBM daoImpl=new DocumentoIdentidadBM();
+        Log("METODO ELIMINAR Dominio");
+        DominioBM daoImpl=new DominioBM();
         String mensaje=daoImpl.inactivarRegistro(entidad);
         FacesContext context = FacesContext.getCurrentInstance(); 
-        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("ELIMINACION DE DOCUMENTOIDENTIDAD",mensaje));
+        context.addMessage("grwForMensajeConfirmacion",new FacesMessage("ELIMINACION DE DOMINIO",mensaje));
     }
     /**
      * Metodo prepararEliminacion(Integer id).
-     * Recive el Id del DocumentoIdentidad a modificar y lo consulta frente a la base de datos 
-     * obteniendo el objeto DocumentoIdentidad completo, para posteriormente asignarlo a la variable "entidad" (Global), 
+     * Recive el Id del Dominio a modificar y lo consulta frente a la base de datos 
+     * obteniendo el objeto Dominio completo, para posteriormente asignarlo a la variable "entidad" (Global), 
      * para que cuando se llame el metodo @see eliminar() el objeto tenga sus valores 
      * completos para su eliminacion.
-     * @see eliminar() modifica el objeto DocumentoIdentidad.
-     * @param id ID del DocumentoIdentidad a Modificar.
+     * @see eliminar() modifica el objeto Dominio.
+     * @param id ID del Dominio a Modificar.
      * @author Gerlin Orlando Torres Saavedra.
      */
     public void prepararEliminacion(Integer id){
-        Log("METODO PREPARAR ELIMINACION DEL DOCUMENTO DE IDENTIDAD");
-        DocumentoIdentidadBM daoImpl=new DocumentoIdentidadBM();
+        Log("METODO PREPARAR ELIMINACION DEL DOMINIO");
+        DominioBM daoImpl=new DominioBM();
         entidad=daoImpl.buscarPorId(id);
         System.out.print("prueba");
     }

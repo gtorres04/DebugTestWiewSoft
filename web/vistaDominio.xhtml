@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Dominios</title>
+            </f:facet>
+            <h:outputStylesheet library="css" name="estilos.css" />
+        </h:head>
+
+        <h:body>
+
+            <p:layout id="lytDominio" fullPage="true" >
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    Header
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    Footer
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="250" header="Menu de Opciones" collapsible="true">
+
+                </p:layoutUnit>
+                <p:layoutUnit position="center" id="lytUntCenterListaDocumentosIdentidad">
+                    <h:form id="idFrmBtnNuevoUsuario" style="text-align: center">
+                        <p:commandButton value="Nuevo Dominio" icon="iconadd" oncomplete="dlgWgvNuevoDominio.show()" update=":frmIdNuevoDominio"/>
+                    </h:form>
+                    <br/>
+                    <!--MENSAJE DE CONFIRMACIÓN-->
+                    <p:growl life="3000" for="grwForMensajeConfirmacion" id="grwIdMensajeConfirmacion" showDetail="true"/>
+                    <!--LISTADO DE LOS DOCUMENTOS DE IDENTIDAD-->
+                    <h:form id="frmIdlistaDocumentosIdentidad">
+                        <p:dataTable var="dominio" onExpandStart="#{dominioMB.dominios}" value="#{dominioMB.dominios}" emptyMessage="No Dominios." paginator="true" rows="15"  
+                             paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">  
+
+                            <p:column headerText="ID">  
+                                <h:outputText value="#{dominio.id}" />  
+                            </p:column>  
+                            <p:column headerText="Nombre">  
+                                <h:outputText value="#{dominio.nombre}" />  
+                            </p:column>  
+
+                            <p:column style="width:12%; text-align: center" headerText="Opciones">  
+                                <p:commandButton oncomplete="dlgWgvEditarDominio.show()" update=":frmIdEditarDominio:dlgIdEditarDominio" action="#{dominioMB.prepararActualizacion(dominio.id)}" icon="iconedit" title="Editar"/>
+                                <p:commandButton oncomplete="confDlgWgvConfirmarEliminar.show()" update=":frmIdCofirmarEliminar" action="#{dominioMB.prepararEliminacion(dominio.id)}" icon="icondelete" title="Eliminar"/>    
+                            </p:column>
+
+                        </p:dataTable>
+                    </h:form>
+                </p:layoutUnit>
+            </p:layout>
+            <!--FORMULARIO DE NUEVO DOCUMENTO DE IDENTIDAD-->
+            <h:form id="frmIdNuevoDominio">
+                <p:dialog header="Registrar Dominios" widgetVar="dlgWgvNuevoDominio" resizable="false" id="dlgIdNuevoDominio" modal="true">  
+                    <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">        
+                        <h:outputText value="Nombre:" /> 
+                        <p:inputText required="true" id="inpTxtIdNombreDominio" value="#{dominioMB.dominio.nombre}" style="width:200px"/>
+                    </h:panelGrid>  
+                    <p:separator/>
+                    <p:commandButton value="&nbsp;Guardar" update=":grwIdMensajeConfirmacion :frmIdlistaDocumentosIdentidad frmIdNuevoDominio" action="#{dominioMB.insertar()}" oncomplete="handleLoginRequest(xhr, status, args,1)" icon="iconsave" title="Guardar"/>
+                    <p:commandButton value="&nbsp;Cancelar" update=":frmIdlistaDocumentosIdentidad" oncomplete="dlgWgvNuevoDominio.hide()" icon="iconcancel" title="Cancel"/>
+                </p:dialog>
+            </h:form>
+            
+            
+            <!--FORMULARIO MODIFICAR DOCUMENTO DE IDENTIDAD-->
+            <h:form id="frmIdEditarDominio">
+                <p:dialog header="Actualizar Dominios" widgetVar="dlgWgvEditarDominio" resizable="false" id="dlgIdEditarDominio" modal="true">  
+                    <h:inputHidden value="#{dominioMB.dominio.id}"/>
+                    <h:panelGrid id="display" columns="2" cellpadding="4" style="margin:0 auto;">
+                        <h:outputText value="Nombre:" /> 
+                        <p:inputText required="true" id="inpTxtIdNombreDominioEditar" value="#{dominioMB.dominio.nombre}" style="width:200px"/>  
+                    </h:panelGrid>  
+                    <p:separator/>
+                    <p:commandButton value="&nbsp;Guardar" update=":grwIdMensajeConfirmacion :frmIdlistaDocumentosIdentidad frmIdEditarDominio" action="#{dominioMB.actualizar()}" oncomplete="handleLoginRequest(xhr, status, args,2)" icon="iconsave" title="Guardar"/>
+                    <p:commandButton value="&nbsp;Cancelar" update=":frmIdlistaDocumentosIdentidad" oncomplete="dlgWgvEditarDominio.hide()" icon="iconcancel" title="Cancel"/>
+
+                </p:dialog>
+            </h:form>
+            
+            
+            <!-- vista Confirmar Eliminacion-->
+            <h:form id="frmIdCofirmarEliminar">
+                <p:confirmDialog header="Eliminar Dominio" severity="alert" widgetVar="confDlgWgvConfirmarEliminar">
+                    <h:inputHidden value="#{dominioMB.dominio.id}"/>
+                    <f:facet name="message">
+                        <h:outputText value="Confirme Eliminar el Dominio [ #{dominioMB.dominio.nombre} ]"/>
+                    </f:facet>
+                    <p:commandButton value="Aceptar" action="#{dominioMB.eliminar()}" update=":frmIdlistaDocumentosIdentidad :grwIdMensajeConfirmacion" oncomplete="confDlgWgvConfirmarEliminar.hide()" icon="iconaccept"/>
+                    <p:commandButton value="Cancelar" onclick="confDlgWgvConfirmarEliminar.hide();" type="button" icon="iconcancel"/>
+                </p:confirmDialog>
+            </h:form>
+            <script type="text/javascript">
+                function registrar(args){
+                    if(args.validationFailed){
+                        dlgWgvNuevoDominio.show();
+                    }else{
+                        dlgWgvNuevoDominio.hide();
+                    }
+                }
+                function editar(args){
+                    if(args.validationFailed){
+                        dlgWgvEditarDominio.show();
+                    }else{
+                        dlgWgvEditarDominio.hide();
+                    }
+                }
+                function handleLoginRequest(xhr, status, args,opcion) {
+                    switch(opcion){
+                        case 1:
+                            registrar(args);
+                        break;
+                        case 2:
+                            editar(args);
+                        break;
+                    }
+                }  
+            </script>
+        </h:body>
+
+    </f:view>
+</html>
+

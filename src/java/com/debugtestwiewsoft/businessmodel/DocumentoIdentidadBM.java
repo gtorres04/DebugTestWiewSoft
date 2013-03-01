@@ -12,24 +12,28 @@ import java.util.List;
 import javax.persistence.EntityManagerFactory;
 
 /**
- * Clase DocumentoIdentidadDaoImpl: Clase Modelo de la Entidad DocumentoIdentidad.
- * En este Clase Modelo se intermedia el ManageBean "DocumentoIdentidadBean" con toda la logica de negocio 
- * correspondiente a la entidad "DocumentoIdentidad". Esta clase hereda de la Clase Generica "@see DaoImp<T>"
+ * Clase DocumentoIdentidadBM: Clase Modelo de la Entidad DocumentoIdentidad.
+ * En esta Clase Modelo se intermedia el ManageBean "DocumentoIdentidadMB" con toda la logica de negocio 
+ * correspondiente a la entidad "DocumentoIdentidad". Esta clase hereda de la Clase Generica "@see DaoImp<T>",
+ * herendando metodos como:
  * 1. Registro.
  * 2. Listado.
  * 3. Modificacion.
  * 5. Eliminacion.
  * 6. Entre otros.
  * @author Gerlin Orlando Torres Saavedra
- * @see DaoImpl Clase Generica donde se realizan los procesos que son factor comun entre las entidades.
+ * @see DaoImpl
  */
 public class DocumentoIdentidadBM extends DaoImpl<DocumentoIdentidad> {
     EntityManagerFactory emf;
     /**
-     * Constructor DocumentoIdentidadDaoImpl (Vacio).
+     * Constructor DocumentoIdentidadBM (Vacio).
      * Se llama la instancia del @see EntityManagerFactory, y se le envia al contructor de la clase padre, 
      * ya que en ella es donde se realiza toda interaccion entre JPA y la Base de Datos. 
      * Ademas se referencia la instancia @see EntityManagerFactory en una variable global "emf".
+     * 
+     * @author Gerlin Orlando Torres Saavedra
+     * @see EntityManagerFactory
      */
     
     public DocumentoIdentidadBM() {
@@ -41,7 +45,7 @@ public class DocumentoIdentidadBM extends DaoImpl<DocumentoIdentidad> {
      * Metodo buscarPorId(Integer id).
      * Recibe el Id del DocumentoIdentidad a modificar y los consulta frente a la base de datos (utilizando un 
      * metodo de la clase padre super.buscarPorId(id, "DocumentoIdentidad")) obteniendo el objeto DocumentoIdentidad completo.
-     * @param id identificados del DocumentoIdentidad a Modificar.
+     * @param id  ID del DocumentoIdentidad a buscar.
      * @return Una instancia de tipo "DocumentoIdentidad" del "id" especificado como parametro.
      */
     public DocumentoIdentidad buscarPorId(Integer id) {
@@ -122,7 +126,7 @@ public class DocumentoIdentidadBM extends DaoImpl<DocumentoIdentidad> {
      * Metodo buscarTodos().
      * Consulta en la base de datos todos los DocumentoIdentidad, tando los activos como los inactivos, es decir, 
      * los que el estado sea TRUE o FALSE.
-     * @return List<DocumentoIdentidad>, una lista de los DocumentoIdentidad que se encuentran activos e inactivos, es decir, que su estado es TRUE o FALSE.
+     * @return List<DocumentoIdentidad>, una lista de los DocumentoIdentidad que se encuentran activos e inactivos, es decir, que su estado es TRUE y FALSE.
      */
     public List<DocumentoIdentidad> buscarTodos() {
         List<DocumentoIdentidad> listaDocumentoIdentidadActivas=super.buscarTodos("DocumentoIdentidad");
@@ -131,15 +135,15 @@ public class DocumentoIdentidadBM extends DaoImpl<DocumentoIdentidad> {
    
      /**
      * Metodo inactivarRegistro(DocumentoIdentidad entidad). @Override
-     * Le modifica el estado al DocumentoIdentidad (Inactivar) siempre y cuando este DocumentoIdentidad no se encuentre relacionado con un usuario activo (Un usuario donde su estado es TRUE)
-     * @param entidad Parametro de Tipo "DocumentoIdentidad", cuyo DocumentoIdentidad sera el referente para modificar el estado a FALSE.
-     * @return List<Usuario>, una lista de los Usuario que se encuentran activos que estan relacionados con el DocumentoIdentidad especificado como parametro.
+     * Modifica el estado al DocumentoIdentidad (Inactivar) siempre y cuando este DocumentoIdentidad no se encuentre relacionado(a) con otro registro activo de otra tabla.
+     * @param entidad Referencia de Tipo "DocumentoIdentidad", cuyo DocumentoIdentidad sera el referente para modificar el estado a FALSE.
+     * @return String, una cadena donde se le expecifica el mensaje de exito o fracaso que se obtuvo de la inactivación.
      */
     @Override
     public String inactivarRegistro(DocumentoIdentidad entidad) {
         try {
-            DocumentoIdentidad entidad_aux=buscarPorId(entidad.getId(),"DocumentoIdentidad");
-            if(entidad_aux.getUsuarioList().isEmpty()){
+            entidad=buscarPorId(entidad.getId(),"DocumentoIdentidad");
+            if(entidad.getUsuarioList().isEmpty()){
                 entidad.setEstado(Boolean.FALSE);
                 entidad.setTiempoEstado(new Date());
                 return super.inactivarRegistro(entidad); 
